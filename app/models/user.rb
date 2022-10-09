@@ -11,4 +11,11 @@
 #  updated_at      :datetime         not null
 #
 class User < ApplicationRecord
+  has_secure_password
+
+  has_many :posts, dependent: :destroy
+  has_many :comments, dependent: :destroy
+
+  validates :email, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :email, :first_name, :last_name, presence: true
 end

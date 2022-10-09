@@ -11,5 +11,10 @@
 #  updated_at      :datetime         not null
 #
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :email, :password_digest, :first_name, :last_name
+  attributes :id, :email, :first_name, :last_name
+  attribute :password_digest, if: :with_password?
+
+  def with_password?
+    @instance_options[:with_password]
+  end
 end
