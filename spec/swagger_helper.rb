@@ -17,6 +17,15 @@ RSpec.configure do |config|
   config.swagger_docs = {
     'v1/swagger.yaml' => {
       openapi: '3.0.1',
+      components: {
+        securitySchemes: {
+          Bearer: {
+            type: :apiKey,
+            name: 'Authorization',
+            in: :header
+          }
+        }
+      },
       info: {
         title: 'API V1',
         version: 'v1'
@@ -24,10 +33,18 @@ RSpec.configure do |config|
       paths: {},
       servers: [
         {
+          url: 'http://{defaultHost}',
+          variables: {
+            defaultHost: {
+              default: ENV.fetch('BE_HOST', 'localhost:3000')
+            }
+          }
+        },
+        {
           url: 'https://{defaultHost}',
           variables: {
             defaultHost: {
-              default: 'www.example.com'
+              default: ENV.fetch('BE_HOST', 'localhost:3000')
             }
           }
         }
