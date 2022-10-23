@@ -6,8 +6,29 @@ module Api
       # GET /posts
       def index
         @posts = Post.all
+        @posts = @posts.searched(params[:query]) if params[:query].present?
+        @posts = @posts.order("#{sort_by} #{sort_to}").page(params[:page])
     
-        render json: @posts
+        # render json: {
+        #   posts: @posts,
+        #   meta: {
+        #     total_count: @posts.total_count,
+        #     total_pages: @posts.total_pages
+        #   }
+        # }
+        render json: @posts, adapter: :json,
+                             meta: {
+                               total_count: @posts.total_count,
+                               total_pages: @posts.total_pages
+                             }
+      end
+
+      def sort_by
+        %w[title created_at].include?(params[:sort_by]) ? params[:sort_by] : 'created_at'
+      end
+
+      def sort_to
+        %w[desc asc].include?(params[:sort_to]) ? params[:sort_to] : 'desc'
       end
     
       # GET /posts/1

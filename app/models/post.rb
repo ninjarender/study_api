@@ -11,4 +11,8 @@
 #
 class Post < ApplicationRecord
   belongs_to :user
+
+  scope :searched, ->(query) { where('lower(title) like ?', "%#{query.downcase}%") }
+
+  paginates_per 1
 end
